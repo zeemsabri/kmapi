@@ -38,6 +38,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/health', healthRoutes);
 app.use('/api/stripe', stripeRoutes);
 
+// Users route (both top-level and under /api for convenience)
+import usersRoutes from './routes/usersRoutes';
+app.use('/users', usersRoutes);
+app.use('/api/users', usersRoutes);
+
 // 404 Handler
 app.use((_req: Request, res: Response) => {
   res.status(404).json({
