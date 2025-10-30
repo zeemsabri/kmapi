@@ -38,6 +38,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/health', healthRoutes);
 app.use('/api/stripe', stripeRoutes);
 
+// Auth routes (versioned)
+import authRoutes from './routes/authRoutes';
+app.use('/api/v1/auth', authRoutes);
+
 // Users route (both top-level and under /api for convenience)
 import usersRoutes from './routes/usersRoutes';
 app.use('/users', usersRoutes);
