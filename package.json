@@ -10,18 +10,25 @@
     "lint": "tsc --noEmit",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["stripe", "api", "backend", "node", "express"],
+  "keywords": [
+    "stripe",
+    "api",
+    "backend",
+    "node",
+    "express"
+  ],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@google-cloud/secret-manager": "^6.1.1",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
+    "firebase-admin": "^12.7.0",
     "helmet": "^8.1.0",
     "morgan": "^1.10.1",
-    "stripe": "^19.1.0",
-    "firebase-admin": "^12.7.0"
+    "stripe": "^19.1.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
