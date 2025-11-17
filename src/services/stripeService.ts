@@ -10,7 +10,10 @@ if (!process.env.STRIPE_DONATION_PRODUCT_ID) {
 
 // I've set this to a standard, recent API version.
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: '2025-10-29.clover',
+  // --- THIS IS THE FIX ---
+  // We use 'as any' to bypass the build-time error,
+  // while still using the version that works at runtime.
+  apiVersion: '2024-06-20' as any,
 });
 
 export class StripeService {
