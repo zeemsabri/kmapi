@@ -1,5 +1,6 @@
 import admin from 'firebase-admin';
 import fs from 'fs';
+import { Contact } from '../utils/vCardHelpers';
 
 let initialized = false;
 
@@ -87,6 +88,41 @@ class FirebaseService {
       const val = snap.val();
       const data = normalizeRealtime(val);
       return { success: true as const, data };
+    } catch (error) {
+      return { success: false as const, error: (error as Error).message };
+    }
+  }
+
+  async getContactsByIds(ids: string[], collection: string = 'contacts') {
+    try {
+      const db = admin.firestore();
+      const refs = ids.map(id => db.collection(collection).doc(id));
+      const snaps = await db.getAll(...refs);
+      const contacts = snaps.map(snap => {
+        if (snap.exists) {
+          return { id: snap.id, ...snap.data() };
+        }
+        return null;
+      }).filter(c => c !== null);
+      return { success: true as const, data: contacts };
+    } catch (error) {
+      return { success: false as const, error: (error as Error).message };
+    }
+  }
+
+  async batchCreateContacts(contacts: Contact[], collection: string = 'contacts') {
+    try {
+      const db = admin.firestore();
+      const batch = db.batch();
+      const collectionRef = db.collection(collection);
+
+      contacts.forEach(contact => {
+        const docRef = collectionRef.doc(); // Auto-ID
+        batch.set(docRef, contact);
+      });
+
+      await batch.commit();
+      return { success: true as const, count: contacts.length };
     } catch (error) {
       return { success: false as const, error: (error as Error).message };
     }

@@ -19,7 +19,7 @@ app.use(cors({
   origin: (origin, callback) => {
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
-    
+
     if (allowedOrigins.includes('*') || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -37,6 +37,9 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use('/api/health', healthRoutes);
 app.use('/api/stripe', stripeRoutes);
+
+import cardDavRoutes from './routes/cardDavRoutes';
+app.use('/api/carddav', cardDavRoutes);
 
 // Auth routes (versioned)
 import authRoutes from './routes/authRoutes';
@@ -59,7 +62,7 @@ app.use((_req: Request, res: Response) => {
 app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   console.error('Error:', err.message);
   console.error(err.stack);
-  
+
   res.status(500).json({
     success: false,
     message: process.env.NODE_ENV === 'development' ? err.message : 'Internal server error',

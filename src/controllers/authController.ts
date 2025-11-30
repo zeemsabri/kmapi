@@ -58,11 +58,19 @@ class AuthController {
         userSnap = await usersCol.where('pin', '==', pin).limit(1).get();
       }
 
+      // --- Corrected Code (Requires fetching user role data) ---
       if (!userSnap.empty) {
         // Success handler
         const userDoc = userSnap.docs[0];
+        const userData = userDoc.data() as { isAdmin?: boolean }; // Cast to get isAdmin
         const userId = userDoc.id;
-        const token = await admin.auth().createCustomToken(userId);
+
+        // CRITICAL FIX: Include the isAdmin status as a custom claim
+        const customClaims = {
+          isAdmin: !!userData.isAdmin
+        };
+
+        const token = await admin.auth().createCustomToken(userId, customClaims);
         // Reset attempts
         await attemptsRef.delete().catch(() => undefined);
         return res.status(200).json({ success: true, token });
